@@ -1,0 +1,13 @@
+﻿
+Create a self-signed cert in PowerShell v4 running as ADMINISTRATOR:
+
+New-SelfSignedCertificate -certstorelocation cert:\localmachine\my -dnsname <your hostname>
+
+Note the thumbprint of the certificate.
+
+netsh http add urlacl url=https://+:8081/ user=Everyone
+
+netsh http add sslcert ipport=0.0.0.0:8081 certhash=<certificate thumbprint> appid={12345678-db90-4b66-8b01-88f7af2e36bf}
+
+Note the GUID is a constant for OWIN self-hosted apps and it is associated with HttpListener.
+

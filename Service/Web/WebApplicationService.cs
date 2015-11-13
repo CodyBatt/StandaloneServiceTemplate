@@ -25,8 +25,8 @@ namespace Service.Web
             Container = container;
         }
 
-        private const string BaseUri = "http://*:8080";
-        //private const string BaseUri = "https://*:8081";
+        //private const string BaseUri = "http://*:8080";
+        private const string BaseUri = "https://*:8081";
 
         private IDisposable _service;
 
