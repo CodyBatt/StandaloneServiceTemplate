@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Autofac;
-using Client;
 using Client.ServiceClient;
 using Client.Web;
 using CommandLine;
-using DataTransfer;
 using Serilog;
 
-namespace HardwareBuildClient
+namespace Client
 {
     class Program
     {
