@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Autofac;
-using Client.ServiceClient;
 using Client.Web;
 using CommandLine;
+using Logic.Api;
 using Serilog;
 
 namespace Client
@@ -21,11 +21,11 @@ namespace Client
                 .CreateLogger();
 
             var builder = new Autofac.ContainerBuilder();
-            builder.RegisterType<WebClient>().As<IWebClient>();
+            builder.RegisterType<TestClient>().As<ITestApi>();
             builder.RegisterInstance(logger).As<ILogger>();
             builder.RegisterInstance(options).As<IProgramOptions>();
             builder.RegisterType<TestClient>().AsSelf();
-            builder.RegisterType<SignalRClient>().AsSelf();
+            //builder.RegisterType<SignalRClient>().AsSelf();
 
             using (var container = builder.Build())
             {
@@ -38,10 +38,10 @@ namespace Client
         {
             try
             {
-                var signalr = container.Resolve<SignalRClient>();
-                await signalr.ConnectSignalR();
+                //var signalr = container.Resolve<SignalRClient>();
+                //await signalr.ConnectSignalR();
 
-                var client = container.Resolve<TestClient>();
+                var client = container.Resolve<ITestApi>();
                 var message = await client.Get();
                 Console.WriteLine(message.Message);
             }

@@ -6,22 +6,24 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using DataTransfer;
+using Logic.Api;
 using Newtonsoft.Json;
+using Service.Web.Controllers;
 
 namespace Client.Web
 {
-    class WebClient : IWebClient
+    class TestClient : ITestApi
     {
         public string ServerUri { get; }
 
-        public WebClient()
+        public TestClient()
         {
             ServerUri = ConfigurationManager.AppSettings["ServerUri"];
-
         }
 
 
-        public async Task<string> GetAsString(string endpoint)
+        public async Task<SimpleMessage> Get()
         {
             var handler = new HttpClientHandler
             {
@@ -29,12 +31,11 @@ namespace Client.Web
             };
             
 
-            using (var client = new HttpClient(handler))
+            using (var client = new HttpClient(handler) {BaseAddress = new Uri(ServerUri)})
             {
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                client.BaseAddress = new Uri(ServerUri);
                 client.Timeout = TimeSpan.FromHours(12);
-                return await client.GetStringAsync(endpoint);
+                var service = Refit.RestService.For<ITestApi>(client);
+                return await service.Get();
             }
         }
 

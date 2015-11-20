@@ -1,0 +1,15 @@
+﻿
+Uses topshelf for Windows service support.  Command line options supported:
+
+http://docs.topshelf-project.com/en/latest/overview/commandline.html
+
+
+Basic Usage:
+
+Service.exe install --sudo
+
+Service.exe uninstall
+
+Service.exe start
+
+Service.exe stop

@@ -23,10 +23,10 @@ namespace Service.Web
             _config = config;
             _config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
             Container = container;
+            
         }
 
-        //private const string BaseUri = "http://*:8080";
-        private const string BaseUri = "https://*:8081";
+        
 
         private IDisposable _service;
 
@@ -35,9 +35,12 @@ namespace Service.Web
             _service = WebApp.Start(BaseUri, app =>
             {
                 Log.Debug($"Starting OWIN web application on {BaseUri}");
-                
-                var listener = (HttpListener)app.Properties["System.Net.HttpListener"];
-                listener.AuthenticationSchemes = AuthenticationSchemes.IntegratedWindowsAuthentication;
+
+                if (UseWindowsAuthentication)
+                {
+                    var listener = (HttpListener) app.Properties["System.Net.HttpListener"];
+                    listener.AuthenticationSchemes = AuthenticationSchemes.IntegratedWindowsAuthentication;
+                }
 
                 Log.Debug(" .. using Cors");
                 app.UseCors(CorsOptions.AllowAll);
@@ -73,5 +76,9 @@ namespace Service.Web
         public string DisplayName => ConfigurationManager.AppSettings[ServiceDisplayNameConfigurationKey];
         public string ServiceName => ConfigurationManager.AppSettings[ServiceNameConfigurationKey];
         public string Description => ConfigurationManager.AppSettings[ServiceDescriptionConfigurationKey];
+
+        private string BaseUri => ConfigurationManager.AppSettings["ServiceUrl"];
+
+        bool UseWindowsAuthentication => ConfigurationManager.AppSettings["UseWindowsAuthentication"] != null;
     }
 }

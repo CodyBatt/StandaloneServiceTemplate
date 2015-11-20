@@ -1,9 +1,13 @@
-﻿using System.Web.Http;
+﻿using System.Threading.Tasks;
+using System.Web.Http;
+using DataTransfer;
 using Logic;
+using Logic.Api;
+using Logic.Constants;
 
 namespace Service.Web.Controllers
 {
-    public class TestController : ApiController
+    public class TestController : ApiController, ITestApi
     {
         ITestLogic Logic { get; }
 
@@ -12,21 +16,11 @@ namespace Service.Web.Controllers
             Logic = logic;
         }
 
-        [Route("test")]
+        [Route(Constants.TestRoute)]
         [HttpGet]
-        public IHttpActionResult Get()
+        public Task<SimpleMessage> Get()
         {
-            return Ok(Logic.SayHello());
-        }
-
-        [Route("sectest")]
-        [Authorize]
-        [HttpGet]
-        public IHttpActionResult GetSecure()
-        {
-            var message = Logic.SayHello();
-            message.Message = message.Message + " - Authenticated";
-            return Ok();
+            return Task.FromResult(Logic.SayHello());
         }
     }
 }
