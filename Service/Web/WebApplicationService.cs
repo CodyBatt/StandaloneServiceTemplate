@@ -9,6 +9,7 @@ using Microsoft.Owin.Cors;
 using Microsoft.Owin.Hosting;
 using Owin;
 using Serilog;
+using Service.Web.Swagger;
 
 namespace Service.Web
 {
@@ -26,8 +27,6 @@ namespace Service.Web
             
         }
 
-        
-
         private IDisposable _service;
 
         public void Start()
@@ -42,6 +41,8 @@ namespace Service.Web
                     listener.AuthenticationSchemes = AuthenticationSchemes.IntegratedWindowsAuthentication;
                 }
 
+                SwaggerConfig.RegisterConfig(_config);
+
                 Log.Debug(" .. using Cors");
                 app.UseCors(CorsOptions.AllowAll);
 
@@ -55,10 +56,10 @@ namespace Service.Web
                 app.UseWebApi(_config);
 
                 Log.Debug(" .. mapping signalr");
-                app.MapSignalR("/signalr", new HubConfiguration
-                {
-                    EnableDetailedErrors = true
-                });
+//                app.MapSignalR("/signalr", new HubConfiguration
+//                {
+//                    EnableDetailedErrors = true
+//                });
             });
             
         }
